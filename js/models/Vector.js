@@ -1,6 +1,10 @@
 define( [ 'models/Tools' ], function ( Tools )
 {
-  // Vector constructor method
+  // Vector class
+  // ======================================================================
+  // Simple vector class to hold coordinates and a set of methods to work
+  // with instances of the class
+  //
   function Vector ( a_x, a_y )
   {
     this.x = Tools.isNumber( a_x ) ? a_x : 0;
@@ -9,6 +13,7 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   }
 
+  // adds a vector to this one
   Vector.prototype.add = function add ( a_vector )
   {
     if( Tools.isVector( a_vector )) {
@@ -21,6 +26,7 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   };
 
+  // substracts a vector from this one
   Vector.prototype.sub = function ( a_vector )
   {
     if( Tools.isVector( a_vector )) {
@@ -33,6 +39,7 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   };
 
+  // multiplies this vector by a scalar
   Vector.prototype.mult = function ( a_number )
   {
     if( Tools.isNumber( a_number )) {
@@ -45,6 +52,7 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   };
 
+  // divides this vector by a scalar
   Vector.prototype.div = function ( a_number )
   {
     if( a_number !== 0 ) {
@@ -56,11 +64,13 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   };
 
+  // calcultes the vector's magnitude
   Vector.prototype.mag = function ()
   {
     return Math.sqrt( this.x*this.x + this.y*this.y );
   };
   
+  // normalizes a vector (magnitude of 1)
   Vector.prototype.normalize = function ()
   {
     var m = this.mag();
@@ -72,6 +82,7 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   };
 
+  // limits the magnitude of a vector to a scalar value
   Vector.prototype.limit = function ( a_number )
   {
     if( Tools.isNumber( a_number )) {
@@ -85,11 +96,13 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   };
 
+  // returns a new instance of this vector
   Vector.prototype.clone = function ()
   {
     return new Vector( this.x, this.y );
   };
 
+  // randomizes vector coordinates within given limits
   Vector.prototype.randomize = function ( a_from, a_to )
   {
     if( Tools.isNumber( a_from ))
@@ -111,6 +124,7 @@ define( [ 'models/Tools' ], function ( Tools )
     return this;
   };
 
+  // inverts vector coordinates over a given axis
   Vector.prototype.mirror = function ( a_axis )
   {
     if( a_axis !== 'y' ) this.x *= -1;

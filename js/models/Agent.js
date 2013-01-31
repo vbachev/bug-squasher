@@ -2,39 +2,48 @@ define(
   [ 'models/Tools', 'models/Vector', 'models/World' ],
   function ( Tools, Vector, World )
 {
-
+  // Agent / Bug class
+  // ======================================================================
+  // Represents the active entities in the game; It moves randomly,
+  // reproduces and evolves
+  //
   function Agent ( a_config )
   {
-    a_config = a_config || {};
+    // set defaults
+    this.velocity     = new Vector();
+    this.acceleration = new Vector();
+    this.dodgeVector  = new Vector(); // random wandering behaviour
+    
+    // Motion - properties affecting movement and behaviour
+    this.mass         = 2; // higher mass means more momentum
+    this.maxSpeed     = 4; // will not exceed this speed
+    this.cornering    = 1.5; // increase to allow making tighter turns
+    this.dodgeSize    = 1; // increase will make dodges sharper
+    this.dodgeRate    = 2; // dodges per second
+
+    // Birth - properties affecting life and reproduction
+    this.birthPeriod  = 5; // give birth every N seconds
+    this.birthSize    = 2; // give birth to N children
+    this.hatchTime    = 5; // time for an egg to hatch in seconds
+    this.lifespan     = 20; // bug's life expectation in seconds
+
+    // Template - information on how to display this object
+    this.view = {
+      size  : 10,
+      blur  : 0,
+      color : 'red'
+    };
+
+    // @TODO: these times screw up the game while pausing
+    this.created      = new Date().getTime();
+    this.timeOfDeath  = this.created + this.lifespan * 1000;
+    this.nextBirth    = this.created + this.birthPeriod * 1000;
+
+    // apply and override properties with those provided
+    _.extend( this, a_config || {} );
 
     // make sure the World module has been properly loaded
     World = World || require('models/World');
-
-    this.created      = new Date().getTime();
-    this.timeOfDeath  = this.created + 20 * 1000;
-
-    this.location     = a_config.location || new Vector();
-    this.velocity     = a_config.velocity || new Vector();
-    this.acceleration = new Vector();
-    this.maxSpeed     = a_config.maxSpeed || 4; // will not exceed this speed
-    this.cornering    = a_config.cornering|| 1.5; // increase to allow making tighter turns
-    this.mass         = 2; // higher mass means more momentum
-
-    // Dodging - random wandering behaviour
-    this.dodgeVector  = new Vector();
-    this.dodgeSize    = a_config.dodgeSize || 1; // increase will make dodges sharper
-    this.dodgeRate    = a_config.dodgeRate || 2; // dodges per second
-
-    this.birthRate    = a_config.birthRate || 5; // give birth every N seconds
-    this.birthSize    = a_config.birthSize || 2; // give birth to N children
-    this.nextBirth    = this.created + this.birthRate * 1000;
-
-    // information on how to display this object
-    this.view = {
-      size  : a_config.size  || '10',
-      blur  : a_config.blur  || '0',
-      color : a_config.color || 'red'
-    };
 
     return this;
   }
@@ -45,15 +54,13 @@ define(
     // reset acceleration at each update
     this.acceleration.mult(0);
 
-    // apply global forces provided by World
+    // apply global forces if provided
     if( Tools.isVector( a_data )){
       this.applyForce( a_data );
     }
 
-    // handle reproduction and death
+    // handle reproduction, life and death
     this.handleReproduction();
-
-    this.handleImpacts();
 
     // calculate random wandering
     this.applyBehavior();
@@ -141,38 +148,15 @@ define(
       this.velocity.mult(0);
       this.acceleration.mult(0);
 
-      this.nextBirth = now + this.birthRate * 1000;
+      // set time for next birth
+      this.nextBirth = now + this.birthPeriod * 1000;
     }
 
+    // die when time comes
     if( now > this.timeOfDeath )
     {
       this.destroy();
     }
-  };
-
-  Agent.prototype.handleImpacts = function ()
-  {
-    var i, l, item, distance,
-    impactObjects = _.filter(
-      World.getRegistry(),
-      function( item ){
-        return item.type === 'Impact';
-      }
-    );
-
-    for( i = 0, l = impactObjects.length; i < l; i++ )
-    {
-      item = impactObjects[ i ];
-      distance = this.location.clone().sub( item.location ).mag();
-      if( distance < item.view.size ){
-        this.destroy();
-      }
-    }
-  };
-
-  Agent.prototype.destroy = function destroy ()
-  {
-    World.unregister( this );
   };
 
   return Agent;

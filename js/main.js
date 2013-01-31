@@ -1,4 +1,7 @@
+// object to host dependecies from requirejs
 var system = {
+
+  // used to toggle the game
   toggle : function()
   {
     var button = document.getElementById('switch');
@@ -12,30 +15,28 @@ var system = {
   }
 };
 
-
+// RequireJS configuration
 requirejs.config({
   baseUrl: 'js'
 });
 
+// RequireJS initialization
 requirejs (
-  [ 'models/ViewController', 'models/Clock', 'models/World', 'models/Tools', 'models/Vector', 'lib/underscore', 'lib/jquery' ],
-  function ( ViewController, Clock, World, Tools, Vector )
+  [ 'models/ViewController', 'models/Clock', 'models/World', 'models/Tools', 'models/Vector', 'models/DNA', 'lib/underscore', 'lib/jquery' ],
+  function ( ViewController, Clock, World, Tools, Vector, DNA )
   {
+    // save references to useful objects in the global scope
     system.world  = World;
     system.clock  = Clock;
     system.setStage = ViewController.setStage();
 
-    _( 1 ).times( function(){
+    // create initial agents / bugs
+    _( 2 ).times( function(){
       World.add( 'Bug',
       {
         // initial position and state
         location : new Vector().randomize( 100 ),
         velocity : new Vector().randomize( -10, 10 ),
-
-        // view properties
-        //size  : Math.round( _.random( 3, 6 )),
-        //color : Tools.generateRandomColor(),
-        //blur  : 0,
         
         // motion properties
         maxSpeed  : Math.round( _.random( 1, 3 )),
@@ -44,11 +45,12 @@ requirejs (
         dodgeRate : _.random( 0, 2 ),
 
         // reproduction properties
-        birthRate : 10,
+        birthPeriod : 10,
         birthSize : 2
       });
     });
 
+    // initialize the stage
     $(document).ready(function(){
       ViewController.setStage();
     });

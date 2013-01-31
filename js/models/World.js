@@ -1,6 +1,6 @@
 define(
-  [ 'models/Tools', 'models/Topic', 'models/Vector', 'models/Agent', 'models/Egg', 'models/Impact' ],
-  function ( Tools, Topic, Vector, Agent, Egg, Impact )
+  [ 'models/Tools', 'models/Topic', 'models/Vector', 'models/Agent', 'models/Egg', 'models/Impact', 'models/Particle' ],
+  function ( Tools, Topic, Vector, Agent, Egg, Impact, Particle )
 {
   // World singleton class
   // ======================================================================
@@ -41,9 +41,9 @@ define(
       _registry = _.without( _registry, a_object );
     };
 
-    this.getRegistry = function ()
+    this.getRegistryItemsByType = function ( a_type )
     {
-      return _registry;
+      return _.filter( _registry, function( item ){ return item.type === a_type; });
     },
 
     // updates all registered objects
@@ -64,25 +64,32 @@ define(
     };
 
     // Abstract factory implementation
-    // creates objects on demand
+    // creates objects on demand and sets initial properties for them
     this.add = function ( a_type, a_config )
     {
       var instance = false,
       classes = {
+        // link a requested type to the proper class dependency
         Bug    : Agent,
         Egg    : Egg,
         Impact : Impact
       };
 
-      // limit number of objects
+      // limit number of objects on the stage
       if( ( _canSustainMoreAgents() || a_type === 'Impact' ) && classes[ a_type ] )
       {
-        instance = new classes[ a_type ]( a_config );
+        // initialize the requested object and extend it over the basic particle class
+        instance = new classes[ a_type ]( a_config ),
+        particleInterface = new Particle( a_type );
 
-        instance.id = _.uniqueId();
-        instance.type = a_type;
+        // inherit common Particle interface
+        // defaults() will not override any existing property
+        _.defaults( instance, particleInterface );
+
+        // get a template for this object
         //instance.view = ViewController.getTemplate( this );
         
+        // register in the world registry
         this.register( instance );
       }
 
@@ -94,7 +101,7 @@ define(
 
     var _force = new Vector( 0, 0 ), // stub vector
         _maxAgents = 100,
-        _registry = []; // holds all registered objects
+        _registry = []; // holds references to all particle objects
 
     function _canSustainMoreAgents ()
     {
