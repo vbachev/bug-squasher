@@ -9,7 +9,7 @@ define(
   var Impact = function Impact ( a_config )
   {
     this.location = a_config.location.clone();
-    this.created = new Date().getTime();
+    this.handleEdgeProximity = function(){};
 
     // Template - information on how to display this object
     this.view = {
@@ -36,6 +36,9 @@ define(
 
     this.handleCollisions();
   };
+
+  // override inherited method to disable edge limitations
+  Impact.prototype.handleEdgeProximity = function (){};
 
   // check for collisions with other particles
   Impact.prototype.handleCollisions = function ()

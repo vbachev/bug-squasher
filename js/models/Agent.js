@@ -34,10 +34,8 @@ define(
       color : 'red'
     };
 
-    // @TODO: these times screw up the game while pausing
-    this.created      = new Date().getTime();
-    this.timeOfDeath  = this.created + this.lifespan * 1000;
-    this.nextBirth    = this.created + this.birthPeriod * 1000;
+    this.ageOfDeath     = Tools.convertSecondsToFrames( this.lifespan );
+    this.ageOfNextBirth = Tools.convertSecondsToFrames( this.birthPeriod );
 
     // apply and override properties with those provided
     _.extend( this, a_config || {} );
@@ -51,6 +49,8 @@ define(
   // handle subscription updates
   Agent.prototype.update = function ( a_topic, a_data )
   {
+    this.age++;
+
     // reset acceleration at each update
     this.acceleration.mult(0);
 
@@ -137,8 +137,7 @@ define(
 
   Agent.prototype.handleReproduction = function handleReproduction ()
   {
-    var now = new Date().getTime();
-    if( now > this.nextBirth )
+    if( this.age > this.ageOfNextBirth )
     {
       // give birth
       // create an egg object and pass its parent
@@ -149,11 +148,11 @@ define(
       this.acceleration.mult(0);
 
       // set time for next birth
-      this.nextBirth = now + this.birthPeriod * 1000;
+      this.ageOfNextBirth += Tools.convertSecondsToFrames( this.birthPeriod );
     }
 
     // die when time comes
-    if( now > this.timeOfDeath )
+    if( this.age > this.ageOfDeath )
     {
       this.destroy();
     }

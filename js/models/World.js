@@ -25,8 +25,6 @@ define(
     // ====================================================================
     // Public members
 
-    this.id = _.uniqueId();
-
     // add an object to the register and subscribe it for world updates
     this.register = function ( a_object )
     {
@@ -41,6 +39,7 @@ define(
       _registry = _.without( _registry, a_object );
     };
 
+    // get a filtered registry subset
     this.getRegistryItemsByType = function ( a_type )
     {
       return _.filter( _registry, function( item ){ return item.type === a_type; });
@@ -100,9 +99,10 @@ define(
     // Private members
 
     var _force = new Vector( 0, 0 ), // stub vector
-        _maxAgents = 100,
+        _maxAgents = 100, // max allowed agents on the stage
         _registry = []; // holds references to all particle objects
 
+    // used to limit the number of created objects
     function _canSustainMoreAgents ()
     {
       return _registry.length > _maxAgents ? false : true;

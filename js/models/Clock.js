@@ -44,8 +44,6 @@ define([ 'models/Topic', 'models/Tools' ], function ( Topic, Tools )
     // ====================================================================
     // Public members
 
-    this.id = _.uniqueId();
-
     // used to switch the clock on or off
     this.toggle = function toggle ( a_state )
     {

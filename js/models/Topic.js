@@ -16,8 +16,6 @@ define( function ()
 
     // ====================================================================
     // Public members
-
-    this.id = _.uniqueId();
     
     this.subscribe = function subscribe ( a_object, a_topic )
     {
@@ -27,6 +25,10 @@ define( function ()
       }
 
       _subscribers[ a_topic ].push( a_object );
+
+      // create an id for the object so it can be unsubscribed easier
+      if( !a_object.id )
+        a_object.id = _.uniqueId();
     };
 
     this.unsubscribe = function unsubscribe ( a_object, a_topic )

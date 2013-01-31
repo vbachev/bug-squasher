@@ -4,16 +4,36 @@ define( function ()
   // ======================================================================
   // Stores genes and provides methods for mutation
   //
-  function DNA ( a_genes )
+  function DNA ( a_source )
   {
-    // collect all genes that were passed
-    this.genes = a_genes;
+    // collect all genes (selectively) that were passed
+    this.genes = {
+      // view properties
+      //view     : {
+      // size  : a_source.view.size,
+      // color : a_source.view.color,
+      // blur  : a_source.view.blur,
+      //},
+      
+      // motion properties
+      maxSpeed    : a_source.maxSpeed,
+      cornering   : a_source.cornering,
+      dodgeSize   : a_source.dodgeSize,
+      dodgeRate   : a_source.dodgeRate,
+
+      // reproduction properties
+      birthPeriod : a_source.birthPeriod,
+      birthSize   : a_source.birthSize,
+      hatchTime   : a_source.hatchTime,
+      lifespan    : a_source.lifespan
+    };
+
     return this;
   }
 
   // static properties that affect all instances of this class
   DNA.prototype.mutationAmount = 20; // % increases/decreases of property values
-  DNA.prototype.mutationChance = 20; // % chance of mutation occuring
+  DNA.prototype.mutationChance = 30; // % chance of mutation occuring
 
   // returns mutated genes
   DNA.prototype.getMutatedGeneset = function getMutatedGeneset ()

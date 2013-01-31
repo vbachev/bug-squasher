@@ -16,6 +16,13 @@ define( function()
       return typeof a_argument === 'number' ? true : false;
     },
 
+    // kind of useless method but it seemed reasonable at the time :D
+    convertSecondsToFrames : function ( a_seconds )
+    {
+      // we are working at ~60fps
+      return a_seconds * 60; // Doh!
+    },
+
     // generates a random 8bit color
     // http://paulirish.com/2009/random-hex-color-code-snippets/
     generateRandomColor : function ()

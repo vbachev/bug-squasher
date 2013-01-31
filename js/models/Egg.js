@@ -1,6 +1,6 @@
 define(
-  [ 'models/Tools', 'models/Topic', 'models/World', 'models/Vector', 'models/DNA' ],
-  function ( Tools, Topic, World, Vector, DNA )
+  [ 'models/Tools', 'models/World', 'models/Vector', 'models/DNA' ],
+  function ( Tools, World, Vector, DNA )
 {
   // Egg class
   // ======================================================================
@@ -18,26 +18,7 @@ define(
     this.location = a_parent.location.clone();
 
     // store parent's genes in a DNA object
-    this.dna = new DNA({
-      // view properties
-      //view     : {
-      // size  : a_parent.view.size,
-      // color : a_parent.view.color,
-      // blur  : a_parent.view.blur,
-      //},
-      
-      // motion properties
-      maxSpeed    : a_parent.maxSpeed,
-      cornering   : a_parent.cornering,
-      dodgeSize   : a_parent.dodgeSize,
-      dodgeRate   : a_parent.dodgeRate,
-
-      // reproduction properties
-      birthPeriod : a_parent.birthPeriod,
-      birthSize   : a_parent.birthSize,
-      hatchTime   : a_parent.hatchTime,
-      lifespan    : a_parent.lifespan
-    });
+    this.dna = new DNA( a_parent );
 
     // Template - information on how to display this object
     this.view = {
@@ -46,9 +27,8 @@ define(
       color: 'rgba(0,250,0,.3)'
     };
 
-    this.created    = new Date().getTime();
     this.childCount = Math.round(a_parent.birthSize);
-    this.hatchTime  = this.created + a_parent.hatchTime * 1000;
+    this.hatchAge   = Tools.convertSecondsToFrames( a_parent.hatchTime );
 
     // make sure the World module has been properly loaded
     World = World || require('models/World');
@@ -58,8 +38,10 @@ define(
 
   Egg.prototype.update = function update ()
   {
+    this.age++;
+
     // wait for the time to hatch
-    if( new Date().getTime() > this.hatchTime ){
+    if( this.age > this.hatchAge ){
       this.hatch();
     }
   };

@@ -31,15 +31,12 @@ define([ 'models/Topic' ], function ( Topic )
 
     // ====================================================================
     // Public members
-    
-    this.id = _.uniqueId();
 
     // called on document ready to set the stage for the game
     // saves a reference to the stage node and binds click handlers
     this.setStage = function ()
     {
       _stage.node = $('.stage');
-      _stage.margin = 20;
       _resizeStage();
 
       // bind handler for clicks on the stage
@@ -73,26 +70,30 @@ define([ 'models/Topic' ], function ( Topic )
     // Private members
     
     var _drawStack = [], // will collect references to items that need to be displayed
-        _stage = {}; // keeps information for the stage
+        _stage = { // keeps information for the stage
+          margin : 20
+        };
 
     // called on window resize to adjust the stage accordingly
     function _resizeStage ()
     {
-      var docWidth = $('.wrapper').width(),
+      var docWidth  = $('.wrapper').width(),
           docHeight = document.height,
           topOffset = $('.header').height() + $('.controls').height();
 
-      _stage.width = docWidth;
-      _stage.height = docHeight - topOffset - 50;
-
+      // save dimensions locally and globally
+      _stage.width  = STAGE_WIDTH  = docWidth;
+      _stage.height = STAGE_HEIGHT = docHeight - topOffset - 50;
+console.log(STAGE_HEIGHT, STAGE_WIDTH);
       _stage.node.css({
-        'width' : _stage.width+'px',
+        'width'  : _stage.width +'px',
         'height' : _stage.height+'px'
       });
     }
 
     // trigerred by the clock object's rAF to redraw the stage
     // loops over the drawStack to collect data for each item
+    // @TODO: maybe switch to canvas?
     function _drawFrame ()
     {
       var shadows = [];
@@ -102,8 +103,8 @@ define([ 'models/Topic' ], function ( Topic )
       {
         _checkEdges( item );
 
-        var x = item.location.x || 0,
-            y = item.location.y || 0,
+        var x = item.location.x || '0',
+            y = item.location.y || '0',
             blur = item.view.blur || '0',
             size = item.view.size || '5',
             color = item.view.color || 'gray';
@@ -118,6 +119,7 @@ define([ 'models/Topic' ], function ( Topic )
       _drawStack = [];
     }
 
+    // check if object is close to the edge (or outside)
     function _checkEdges ( a_object )
     {
       // if the object supports responding to edge proximity call its
