@@ -106,10 +106,34 @@ console.log(STAGE_HEIGHT, STAGE_WIDTH);
         var x = item.location.x || '0',
             y = item.location.y || '0',
             blur = item.view.blur || '0',
-            size = item.view.size || '5',
+            size = item.view.size || 5,
             color = item.view.color || 'gray';
       
         shadows.push( x+'px '+y+'px '+blur+'px '+size+'px '+color );
+        
+        // for moving particles - add eye-candy
+        // representing the velocity and dodge vectors with a little circle of 
+        // the same color makes for a really cool worm/maggot like effect
+        if( item.velocity )
+        {
+          // golden ratios :)
+          var sizeRatio = 0.7,
+          distanceRatio = 0.6,
+          // circle radius
+          r1 = size,
+          r2 = r1*sizeRatio,
+          r3 = r2*sizeRatio,
+          // circle distance
+          d1 = (r1+r2)*distanceRatio,
+          d2 = (r2+r3)*distanceRatio,
+          // circle position (vector)
+          v2 = item.velocity.clone().normalize().mult( d1 ).add( item.location ),
+          v3 = item.dodgeVector.clone().normalize().mult( d2 ).add( v2 );
+          
+          // add to frame drawing
+          shadows.push( v2.x+'px '+v2.y+'px '+blur+'px '+r2+'px '+color );
+          shadows.push( v3.x+'px '+v3.y+'px '+blur+'px '+r3+'px '+color );
+        }
       });
 
       // apply to shadow projector element
