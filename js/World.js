@@ -71,6 +71,8 @@ define(
         // link a requested type to the proper class dependency
         Bug    : Agent,
         Egg    : Egg,
+        Corpse : false,
+        Player : false,
         Impact : Impact
       };
 

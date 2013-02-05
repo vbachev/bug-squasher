@@ -50,14 +50,14 @@ requirejs (
           velocity : new Vector().randomize( -10, 10 ),
           
           // motion properties
-          maxSpeed  : Math.round( Tools.random( 1, 2 )),
-          cornering : Tools.random( 0.1, 0.5 ),
+          maxSpeed  : Math.round( Tools.random( 0.5, 2 )),
+          cornering : Tools.random( 0.1, 0.7 ),
           dodgeSize : Tools.random( 0, 10 ),
           dodgeRate : Tools.random( 1, 2 ),
 
           // reproduction properties
-          birthPeriod : 10,
-          birthSize : 2
+          birthPeriod : Tools.random(5, 20),
+          birthSize : Tools.random(1, 2)
         });
       });
 

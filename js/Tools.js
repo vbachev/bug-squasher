@@ -80,7 +80,7 @@ define( function()
     iterate : function iterate ( a_times, a_function )
     {
       for( var i = 0; i < a_times; i++ )
-        a_function();
+        a_function( i + 1 );
     },
 
     debug : true

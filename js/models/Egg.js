@@ -43,7 +43,7 @@ define(
   Egg.prototype.hatch = function hatch ()
   {
     var _this = this;
-    _( this.childCount ).times(function(){
+    Tools.iterate( this.childCount, function(){
       // mutate the DNA genes and add egg's location so it can all
       // be passed as a valid config object to the Agent constructor
       var newDna = _this.dna.getMutatedGeneset();

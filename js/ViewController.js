@@ -1,4 +1,4 @@
-define([ 'Topic' ], function ( Topic )
+define([ 'Tools', 'Topic' ], function ( Tools, Topic )
 {
   // ViewController singleton class
   // ======================================================================
@@ -147,11 +147,12 @@ console.log(STAGE_HEIGHT, STAGE_WIDTH);
           // the same color makes for a really cool worm/maggot like effect
           subTemplate = [];
     
-          var size = 10,
-              color = 'rgba('+ a_object.color.join(',') +',.8)',
+          var size = 6 + a_object.age/200,
+              //color = 'rgba('+ a_object.color.join(',') +',.8)',
+              color = 'rgba(30,100,40,.8)',
 
               // golden ratios :)
-              sizeRatio = 0.7,
+              sizeRatio = 0.8,
               distanceRatio = 0.6,
 
               // circle radius
@@ -176,7 +177,10 @@ console.log(STAGE_HEIGHT, STAGE_WIDTH);
           break;
 
         case 'Egg' :
-          template = ''+x+'px '+y+'px 5px 5px rgba(0,255,0,.3)';
+          Tools.iterate( a_object.childCount, function( index ){
+            template += ''+(x+(index-1)*7)+'px '+y+'px 0 5px rgba(230,180,130,.6), ';
+          });
+          template = template.substring( 0, template.length - 2 );
           break;
 
         case 'Impact' :
