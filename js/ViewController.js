@@ -1,4 +1,4 @@
-define([ 'models/Topic' ], function ( Topic )
+define([ 'Topic' ], function ( Topic )
 {
   // ViewController singleton class
   // ======================================================================
@@ -99,41 +99,10 @@ console.log(STAGE_HEIGHT, STAGE_WIDTH);
       var shadows = [];
 
       // add a box-shadow definition for each item
-      _.each( _drawStack, function( item )
+      $.each( _drawStack, function( index, item )
       {
         _checkEdges( item );
-
-        var x = item.location.x || '0',
-            y = item.location.y || '0',
-            blur = item.view.blur || '0',
-            size = item.view.size || 5,
-            color = item.view.color || 'gray';
-      
-        shadows.push( x+'px '+y+'px '+blur+'px '+size+'px '+color );
-        
-        // for moving particles - add eye-candy
-        // representing the velocity and dodge vectors with a little circle of 
-        // the same color makes for a really cool worm/maggot like effect
-        if( item.velocity )
-        {
-          // golden ratios :)
-          var sizeRatio = 0.7,
-          distanceRatio = 0.6,
-          // circle radius
-          r1 = size,
-          r2 = r1*sizeRatio,
-          r3 = r2*sizeRatio,
-          // circle distance
-          d1 = (r1+r2)*distanceRatio,
-          d2 = (r2+r3)*distanceRatio,
-          // circle position (vector)
-          v2 = item.velocity.clone().normalize().mult( d1 ).add( item.location ),
-          v3 = item.dodgeVector.clone().normalize().mult( d2 ).add( v2 );
-          
-          // add to frame drawing
-          shadows.push( v2.x+'px '+v2.y+'px '+blur+'px '+r2+'px '+color );
-          shadows.push( v3.x+'px '+v3.y+'px '+blur+'px '+r3+'px '+color );
-        }
+        shadows.push( _getItemTemplate( item ));
       });
 
       // apply to shadow projector element
@@ -162,6 +131,63 @@ console.log(STAGE_HEIGHT, STAGE_WIDTH);
         else if ( a_object.location.y < margin )
           a_object.handleEdgeProximity('n');
       }
+    }
+
+    function _getItemTemplate ( a_object )
+    {
+      var x = a_object.location.x || '0',
+          y = a_object.location.y || '0',
+          template = '',
+          subTemplate = [];
+      
+      switch( a_object.type )
+      {
+        case 'Bug' :
+          // representing the velocity and dodge vectors with a little circle of
+          // the same color makes for a really cool worm/maggot like effect
+          subTemplate = [];
+    
+          var size = 10,
+              color = 'rgba('+ a_object.color.join(',') +',.8)',
+
+              // golden ratios :)
+              sizeRatio = 0.7,
+              distanceRatio = 0.6,
+
+              // circle radius
+              r1 = size,
+              r2 = r1*sizeRatio,
+              r3 = r2*sizeRatio,
+
+              // circle distance
+              d1 = (r1+r2)*distanceRatio,
+              d2 = (r2+r3)*distanceRatio,
+
+              // circle position (vector)
+              v2 = a_object.velocity.clone().normalize()
+                .mult( d1 ).add( a_object.location ),
+              v3 = a_object.dodgeVector.clone().normalize()
+                .mult( d2 ).add( v2 );
+          
+          subTemplate.push( ''+x+'px '+y+'px 0 '+r1+'px '+color );
+          subTemplate.push( ''+v2.x+'px '+v2.y+'px 0 '+r2+'px '+color );
+          subTemplate.push( ''+v3.x+'px '+v3.y+'px 0 '+r3+'px '+color );
+          template = subTemplate.join(',');
+          break;
+
+        case 'Egg' :
+          template = ''+x+'px '+y+'px 5px 5px rgba(0,255,0,.3)';
+          break;
+
+        case 'Impact' :
+          template = ''+x+'px '+y+'px 0 '+a_object.radius+'px rgba(0,0,255,.2)';
+          break;
+
+        default :
+          template = ''+x+'px '+y+'px 0 5px gray';
+      }
+
+      return template;
     }
 
     return this;

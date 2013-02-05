@@ -1,4 +1,4 @@
-define( function ()
+define([ 'Tools' ], function ( Tools )
 {
   // DNA class
   // ======================================================================
@@ -8,12 +8,8 @@ define( function ()
   {
     // collect all genes (selectively) that were passed
     this.genes = {
-      // view properties
-      //view     : {
-      // size  : a_source.view.size,
-      // color : a_source.view.color,
-      // blur  : a_source.view.blur,
-      //},
+      // template properties
+      color       : a_source.color,
       
       // motion properties
       maxSpeed    : a_source.maxSpeed,
@@ -32,8 +28,8 @@ define( function ()
   }
 
   // static properties that affect all instances of this class
-  DNA.prototype.mutationAmount = 20; // % increases/decreases of property values
-  DNA.prototype.mutationChance = 30; // % chance of mutation occuring
+  DNA.prototype.mutationAmount = 10; // % increases/decreases of property values
+  DNA.prototype.mutationChance = 50; // % chance of mutation occuring
 
   // returns mutated genes
   DNA.prototype.getMutatedGeneset = function getMutatedGeneset ()
@@ -43,9 +39,10 @@ define( function ()
 
     for( key in this.genes )
     {
-      if( _.random( 100 ) < this.mutationChance ){
+      if( Tools.random( 100 ) < this.mutationChance && key !== 'color' ){
         result[ key ] = this.mutateGene( this.genes[ key ]);
       }
+      result.color = this.mutateColor( this.genes.color );
     }
 
     return result;
@@ -60,6 +57,21 @@ define( function ()
         modifier = 1 + (Math.round(Math.random())*2-1) / divider;
 
     return a_gene * modifier;
+  };
+
+  DNA.prototype.mutateColor = function mutateColor ( a_color )
+  {
+    var result = [0,0,0],
+    colorMutationAmount = 50, // step for color mutation
+    inverter = Math.round(Math.random())*2-1, // +1 or -1
+    modifier = colorMutationAmount * inverter;
+
+    for ( i = 0; i < 3; i++ )
+    {
+      result[i] = Math.min( 200, Math.max( 0, a_color[i] + modifier ));
+    }
+
+    return result;
   };
 
   return DNA;

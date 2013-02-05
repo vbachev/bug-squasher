@@ -1,5 +1,5 @@
 define(
-  [ 'models/Tools', 'models/World', 'models/Topic' ],
+  [ 'Tools', 'World', 'Topic' ],
   function ( Tools, World, Topic )
 {
   // Impact class
@@ -9,17 +9,14 @@ define(
   var Impact = function Impact ( a_config )
   {
     this.location = a_config.location.clone();
-    this.handleEdgeProximity = function(){};
-
-    // Template - information on how to display this object
-    this.view = {
-      size : 20,
-      color: 'rgba(0,0,255,.3)',
-      blur : 0
-    };
+    this.radius   = 20; // impact radius - used for collision detection
+    this.duration = 1;  // time in seconds
 
     // make sure the World module has been properly loaded
-    World = World || require('models/World');
+    World = World || require('World');
+
+    this.ageOfDeath = Tools.convertSecondsToFrames( this.duration );
+    this.handleEdgeProximity = function(){}; // disable inherited method
 
     return this;
   };
@@ -27,9 +24,8 @@ define(
   // event listener triggered by World
   Impact.prototype.update = function ()
   {
-    // fade out
-    this.view.blur += 0.5;
-    if( this.view.blur > 15 )
+    this.age++;
+    if( this.age > this.ageOfDeath )
     {
       this.destroy();
     }
@@ -47,12 +43,12 @@ define(
     _this = this; // save reference to self
 
     // destroy bugs that collide
-    _.each(
+    $.each(
       World.getRegistryItemsByType( 'Bug' ),
-      function( target )
+      function( index, target )
       {
         distance = _this.location.clone().sub( target.location ).mag();
-        if( distance < _this.view.size ){
+        if( distance < _this.radius ){
           target.destroy();
         }
       }

@@ -1,5 +1,5 @@
 define(
-  [ 'models/Tools', 'models/Vector', 'models/World' ],
+  [ 'Tools', 'models/Vector', 'World' ],
   function ( Tools, Vector, World )
 {
   // Agent / Bug class
@@ -15,24 +15,19 @@ define(
     this.dodgeVector  = new Vector(); // random wandering behaviour
     
     // Motion - properties affecting movement and behaviour
-    this.mass         = 2; // higher mass means more momentum
-    this.maxSpeed     = 4; // will not exceed this speed
-    this.cornering    = 1.5; // increase to allow making tighter turns
-    this.dodgeSize    = 1; // increase will make dodges sharper
-    this.dodgeRate    = 2; // dodges per second
+    this.mass         = 2;    // higher mass means more momentum
+    this.maxSpeed     = 4;    // will not exceed this speed
+    this.cornering    = 1.5;  // increase to allow making tighter turns
+    this.dodgeSize    = 1;    // increase will make dodges sharper
+    this.dodgeRate    = 2;    // dodges per second
 
     // Birth - properties affecting life and reproduction
-    this.birthPeriod  = 5; // give birth every N seconds
-    this.birthSize    = 2; // give birth to N children
-    this.hatchTime    = 5; // time for an egg to hatch in seconds
-    this.lifespan     = 20; // bug's life expectation in seconds
+    this.birthPeriod  = 5;    // give birth every N seconds
+    this.birthSize    = 2;    // give birth to N children
+    this.hatchTime    = 5;    // time for an egg to hatch in seconds
+    this.lifespan     = 20;   // bug's life expectation in seconds
 
-    // Template - information on how to display this object
-    this.view = {
-      size  : 10,
-      blur  : 0,
-      color : 'red'
-    };
+    this.color        = [ 200, 10, 10 ];
 
     this.ageOfDeath     = Tools.convertSecondsToFrames( this.lifespan );
     this.ageOfNextBirth = Tools.convertSecondsToFrames( this.birthPeriod );
@@ -41,7 +36,7 @@ define(
     _.extend( this, a_config || {} );
 
     // make sure the World module has been properly loaded
-    World = World || require('models/World');
+    World = World || require('World');
 
     return this;
   }
@@ -91,7 +86,7 @@ define(
   Agent.prototype.applyBehavior = function applyBehaviour ()
   {
     // calculate dodge chance at 60fps
-    if( _.random( 60 / this.dodgeRate ) < 1 )
+    if( Tools.random( 60 / this.dodgeRate ) < 1 )
     {
       // implement Reynolds' wandering behaviour
       // the dodgeSize value is used in such a way as to keep the resultin

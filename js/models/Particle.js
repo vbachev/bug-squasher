@@ -1,5 +1,5 @@
 define(
-  [ 'models/World', 'models/Vector' ],
+  [ 'World', 'models/Vector' ],
   function ( World, Vector )
 {
   // Particle base class
@@ -14,7 +14,7 @@ define(
     this.age      = 0; // age measured in frames passed
 
     // make sure the World module has been properly loaded
-    World = World || require('models/World');
+    World = World || require('World');
 
     return this;
   }

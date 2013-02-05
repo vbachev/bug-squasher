@@ -1,5 +1,5 @@
 define(
-  [ 'models/Tools', 'models/Topic', 'models/Vector', 'models/Agent', 'models/Egg', 'models/Impact', 'models/Particle' ],
+  [ 'Tools', 'Topic', 'models/Vector', 'models/Agent', 'models/Egg', 'models/Impact', 'models/Particle' ],
   function ( Tools, Topic, Vector, Agent, Egg, Impact, Particle )
 {
   // World singleton class

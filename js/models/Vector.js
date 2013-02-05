@@ -1,4 +1,4 @@
-define( [ 'models/Tools' ], function ( Tools )
+define( [ 'Tools' ], function ( Tools )
 {
   // Vector class
   // ======================================================================
@@ -118,8 +118,8 @@ define( [ 'models/Tools' ], function ( Tools )
       a_to   = 1;
     }
 
-    this.x = _.random( a_from, a_to );
-    this.y = _.random( a_from, a_to );
+    this.x = Tools.random( a_from, a_to );
+    this.y = Tools.random( a_from, a_to );
 
     return this;
   };

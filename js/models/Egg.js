@@ -1,5 +1,5 @@
 define(
-  [ 'models/Tools', 'models/World', 'models/Vector', 'models/DNA' ],
+  [ 'Tools', 'World', 'models/Vector', 'models/DNA' ],
   function ( Tools, World, Vector, DNA )
 {
   // Egg class
@@ -20,18 +20,11 @@ define(
     // store parent's genes in a DNA object
     this.dna = new DNA( a_parent );
 
-    // Template - information on how to display this object
-    this.view = {
-      size : 5,
-      blur : 5,
-      color: 'rgba(0,250,0,.3)'
-    };
-
     this.childCount = Math.round(a_parent.birthSize);
     this.hatchAge   = Tools.convertSecondsToFrames( a_parent.hatchTime );
 
     // make sure the World module has been properly loaded
-    World = World || require('models/World');
+    World = World || require('World');
 
     return this;
   }

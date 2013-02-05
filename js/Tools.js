@@ -63,6 +63,26 @@ define( function()
       }
     },
 
+    random : function random ( a_start, a_end )
+    {
+      // set defaults
+      a_start = a_start || 1;
+      a_end = a_end || 0;
+
+      // order the arguments
+      var start = Math.min( a_start, a_end ),
+          end   = Math.max( a_start, a_end );
+
+      // generate random number with JS Math
+      return Math.round( Math.random() * ( end - start )) + start;
+    },
+
+    iterate : function iterate ( a_times, a_function )
+    {
+      for( var i = 0; i < a_times; i++ )
+        a_function();
+    },
+
     debug : true
   };
 });

@@ -1,4 +1,4 @@
-define([ 'models/Topic', 'models/Tools' ], function ( Topic, Tools )
+define([ 'Topic', 'Tools' ], function ( Topic, Tools )
 {
   // Clock singleton class
   // ======================================================================

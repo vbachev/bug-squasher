@@ -25,8 +25,8 @@ requirejs.config({
 
 // RequireJS initialization
 requirejs (
-  [ 'models/ViewController', 'models/Clock', 'models/World', 'models/Vector', 'lib/underscore', 'lib/jquery' ],
-  function ( ViewController, Clock, World, Vector )
+  [ 'Tools', 'ViewController', 'Clock', 'World', 'models/Vector', 'lib/underscore' ],
+  function ( Tools, ViewController, Clock, World, Vector )
   {
     // save references to useful objects in the global scope
     system.world    = World;
@@ -39,21 +39,21 @@ requirejs (
       ViewController.setStage();
 
       // create initial agents / bugs
-      _( 5 ).times( function(){
+      Tools.iterate( 5, function(){
         World.add( 'Bug',
         {
           // initial position and state
           location : new Vector(
-            _.random( 10, STAGE_WIDTH -10 ),
-            _.random( 10, STAGE_HEIGHT-10 )
+            Tools.random( 10, STAGE_WIDTH -10 ),
+            Tools.random( 10, STAGE_HEIGHT-10 )
           ),
           velocity : new Vector().randomize( -10, 10 ),
           
           // motion properties
-          maxSpeed  : Math.round( _.random( 1, 2 )),
-          cornering : _.random( 0.1, 0.5 ),
-          dodgeSize : _.random( 0, 10 ),
-          dodgeRate : _.random( 1, 2 ),
+          maxSpeed  : Math.round( Tools.random( 1, 2 )),
+          cornering : Tools.random( 0.1, 0.5 ),
+          dodgeSize : Tools.random( 0, 10 ),
+          dodgeRate : Tools.random( 1, 2 ),
 
           // reproduction properties
           birthPeriod : 10,
