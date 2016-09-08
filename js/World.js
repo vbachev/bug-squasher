@@ -43,7 +43,7 @@ define(
     this.getRegistryItemsByType = function ( a_type )
     {
       return _.filter( _registry, function( item ){ return item.type === a_type; });
-    },
+    };
 
     // updates all registered objects
     // schedules objects for drawing
@@ -67,6 +67,7 @@ define(
     this.add = function ( a_type, a_config )
     {
       var instance = false,
+      particleInterface,
       classes = {
         // link a requested type to the proper class dependency
         Bug    : Agent,
@@ -80,7 +81,7 @@ define(
       if( ( _canSustainMoreAgents() || a_type === 'Impact' ) && classes[ a_type ] )
       {
         // initialize the requested object and extend it over the basic particle class
-        instance = new classes[ a_type ]( a_config ),
+        instance = new classes[ a_type ]( a_config );
         particleInterface = new Particle( a_type );
 
         // inherit common Particle interface

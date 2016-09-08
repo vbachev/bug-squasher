@@ -78,13 +78,12 @@ define([ 'Tools', 'Topic' ], function ( Tools, Topic )
     function _resizeStage ()
     {
       var docWidth  = $('.wrapper').width(),
-          docHeight = document.height,
+          docHeight = $(document).height(),
           topOffset = $('.header').height() + $('.controls').height();
 
       // save dimensions locally and globally
       _stage.width  = STAGE_WIDTH  = docWidth;
       _stage.height = STAGE_HEIGHT = docHeight - topOffset - 50;
-console.log(STAGE_HEIGHT, STAGE_WIDTH);
       _stage.node.css({
         'width'  : _stage.width +'px',
         'height' : _stage.height+'px'
